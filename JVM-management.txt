@@ -118,3 +118,43 @@ InitialHeapSize
 bytes ->MB converter https://www.gbmb.org/bytes-to-mb 
 
 -XX:MaxHeapSize=600m -XX:MaxHeapSize=1g  increase max heap size 
+
+
+Garbage collections 
+Any onject on the heap which cannot be reached through a reference from the stack (or metaspace)   is elegible from garbage collection  
+
+metaspace reference are never loss 
+
+System.gc(); will suggest JVm to run Garbage collection  its not a direct cmd 
+
+its not recomended to use  , best option is to allow JVM to deside  , since GC impact performance  
+
+only moment you can run is when trying to evalua a code block even then its not suggested
+
+Java 8  -->  JVM will reserve heap memory will never go down  bellow the Xmx
+
+Java 11 --> JVM will dynamically release memory to OS if its not needed  , will not go bellow Xms
+
+
+finalize() method 
+finalize will run before the object is elegible for  garbage collection   , very impredictable  method 
+ , never know if the method its going to be run
+ can affect gc performance
+ 
+soft leaks  - object remains referenced whrn no longer needed 
+
+VisualVM  jdk 8  
+
+GraalVm jdk 9 and up 
+
+Generating heapdump  
+
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath=somefilepath
+
+Eclipse Memory Analyser  ,  Leak suspect report 
+
+
+
+ 
+ 
