@@ -1,0 +1,120 @@
+JVM management 
+
+seeing JVm compilation logs  
+
+-XX:+UnlockDiagnosticVMOptions 
+-XX:LogCompilation
+
+code cash  , hold level 4 (native code) 
+
+max size is 64 MB  
+
+remaining codecash space 
+
+-XX:+PrintCodeCache
+
+
+-XX:InitialCodeCacheSize --> initial size when JVM starts for code cache
+
+-XX:ReservedCodeCacheSize --> Max code cache size 
+
+-XX:CodeCacheExpansionSize --> size Increments cache its going to grow up to the  ReservedCodeCacheSize
+
+values can be provided on begabytes kylobytes gigabytes ( m , k , g) 
+
+jconsole can be used to monitor code cache
+
+forwindows jcosole looks for USER/AppData/Local/Temp/hsperfdata_USER provide write access
+
+C1 copiler  , client compiler -- consentrate in startup performance 
+C2 compiler , server compiler --> long lived  --> optimized over time 
+
+-client --> specified to run only C1 compiler , will add less overhead as well no native code compilation will happend , incresing startup time 
+
+other flags
+
+-server
+-db64 
+-XX:-TierCompilation ---> turnoff tiered compilation  , good for very piece of code 
+-server
+
+Stack  , ---_ very effiient Java stucture  , the stack its composed of mutiple stacks  , every thread will have its own stack 
+
+holds short libed variables 
+
+limited to a thread 
+First In last Out 
+
+
+https://www.udemy.com/course/java-application-performance-and-memory-management/learn/lecture/13841356#overview
+
+Heap  long lived complex objects  , can be access by multiple threads
+
+variables holds a reference to an object on the stack  
+
+local variables  are only stored on the stack  and hold value itself and does't point to a object on heap
+
+Sample to avoid escape reference
+
+//when returning an object return copy of the object  
+
+public Map<String, Customer> getCustomers() {
+		return Map.copyOf(records); // java 10 and up 
+		//return Collections.unmodifiableMap(records);
+	}
+	
+//when creating a new object with the constructor or when doing a set
+
+
+public Book(int id, String title, String author, Double price) {
+		this.id = id;
+		this.title = title;
+		this.author = author;
+		this.price = new Price(price);
+	}
+	
+public void setPrice(Double price) {
+		this.price = new Price(price);
+	}
+
+
+all the primitives are inmutable 
+
+
+Metaspace  , utilize to store metadata of classes , methods 
+example which method should be compiled in native code  
+
+out oif reach from developer  
+
+static varaibles store on the metaspace  
+variables on metaspace are not garbage collected and can be access by any thread ( method object during runtime)
+
+metaspace stating from java 8   , java 7 used PermGen
+
+JVM does operations more complicated  , althoug developer does not have direct control of creating objects on the stack  , the JVM can take this desition for optimization purposes
+example small string 
+
+string pool  -> HashMap on heap dedicated for small string 
+
+String pool sample  
+
+Integer i =76 
+String three =  i.toString().intern() --> intern will place calculated string on the string pool  , this is not required for smaller strings
+
+JVM Tuning 
+
+-XX:PrintStringTableStatistics --> shows Hash map string pool statistics  (StringTable Statistics)
+
+-XX:StringTableSize ---> increase amount of buckets on string pool 
+
+-XX:+UnlockDiagnosticsVMOptions -XX:+PringFlagsFinal --> provide information of the JVM in bytes
+
+after running above you can find out information such as heapsize  
+
+MaxHeapSize
+
+InitialHeapSize
+
+bytes ->MB converter https://www.gbmb.org/bytes-to-mb 
+
+-XX:MaxHeapSize=600m -XX:MaxHeapSize=1g  increase max heap size 
