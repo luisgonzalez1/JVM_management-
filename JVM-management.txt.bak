@@ -152,5 +152,104 @@ Generating heapdump
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:HeapDumpPath=somefilepath
 
+Eclipse Memory Analyser  ,  Leak suspect report 
+
+Garbage collectors concepts  
+
+Mark and sweep 
+
+all threads in application its paused  
+
+follows all object reference from the stack and mark them 
+
+object not been mark all free 
+
+move all refference object in a single memory block which allows to avoid fragmentation in memory
+
+
+Generational garbage collection  
+
+heap divided in different sections 
+
+young geenerations
+
+  small in size and hold showt lived objects  
+
+  minor collection , will not have notisable impact 
+  
+      Eden 
+	  
+	  S0
+	  
+	  S1 
+
+
+old generation   
+
+  if object survive multiple collection it will move to old geenration
+
+  mayor collection   , since space biger will take longer  , can have notisable impact 
+  
+  
+enableling garbage collection  
+
+-verbose:gc
+ minor gc / reason /    before  after total heap 
+[GC (Allocation Failure)  5168K ->4576K(9216K)] 
+
+ full gc  / reason /    before  after total heap
+[Full GC (Ergonomics)  5168K ->4576K(9216K)]  
+
+JVM will dynamically resize the eden and survivos spaced  
+
+-XX:-UseAdaptiveSizePolicy  , Turn off hrapallocation resizing , 
+
+tunning old generation 
+
+	-XX:NewRation=n  how many times bigger the old generation its going to be than the young generation
+
+	    example  -XX:NewRation=4  , old generation will be 4 times bigger than young 
+
+        -XX:NewRation=1 old and young will be split equally 
+
+    -XX:survivorRatio=n  , how much of the survivor spaced will be taken by  S0 and S1 from the youn generation 
+
+       example  
+	  
+       -XX:survivorRatio=8  , survivor will be  1/8 of the youg generation
+
+    -X:MaxTenuringThresholg=n  --> how many generation an object survive before it can go to old generatio , optimally we want this to be as high as possibel since we want object to stay on young generation 
+
+    -X:MaxTenuringThresholg=15 maximun value  
+	
+Choosing Garbage collector 
+
+    Types of collectors 
+	   
+	   Serial --> -XX:+useSerialGC
+	   
+	   Parallel (throughput collector) default collectot jdk 8 and bellow --> multiple threads running the garbage collector 
+	                                     
+	   
+	   Mostly Concurrent  -->app not paused while the application its running ( not really) / ususallu does the marking and then free objects -XX:UseParalledGC
+
+       default on jdk 9 and up 	   
+	   
+	   -XX:+UseConcMarkSweepGC
+	   -XX:+UseG1GC
+	                      
+
  
+G1 garballe collector 
  
+ optimizes mayor collections  ,can dinamically do partial collection on old generation
+ can dynamically allocate to the heap different parts of old and young generation  to prioritize performance 
+ 
+ -XX:ConcGCThreads=n limit other threads 
+ 
+ -XX:InitiatingHeapOccupancyPercent=n  / default 45% / tell at which porcentage JVM G1 uses garbage collection 
+ 
+
+String deduplication  / required G1 garbage collections   --> allow garbage collection change the refference for duplicate strings  , by using hashcode  / additional header bnut it can be usefull
+
+Java Mission Control provider 
