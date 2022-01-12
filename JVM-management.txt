@@ -253,3 +253,24 @@ G1 garballe collector
 String deduplication  / required G1 garbage collections   --> allow garbage collection change the refference for duplicate strings  , by using hashcode  / additional header bnut it can be usefull
 
 Java Mission Control profiler 
+
+To unlock flicht recorder insert following flags 
+oracle jdk   -XX:UnlockCommertialFeatures -XX+FlightRecorder 
+open jdk     -XX:UnlockCommertialFeatures -XX+FlightRecorder 
+
+
+destination File : destination were flight recorder its going to store files
+Name: Name of the recording 
+
+Time fixed recorder : allows to record for a fixed amount of time  
+
+Continuous recording : allow to record continuosly  , data will be store on memory 
+  Since memory is finite , you can specify Maximun size and Maximun age before recorder stops
+  
+event settings : select how intensive the profiling will be the profiling  
+                 Continuous -on server : has less overhead , suited for prod environments
+				 Profiling- on server  : has more overhead  ,provides more granular info
+
+start flight recorder from the JVM paramethers 
+
+-XX:StartFlightRecording=delay=2min,duration=60s,name=Test,filename=recording.jfr,settings=profile
