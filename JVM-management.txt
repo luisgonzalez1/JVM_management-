@@ -272,5 +272,5 @@ event settings : select how intensive the profiling will be the profiling
 				 Profiling- on server  : has more overhead  ,provides more granular info
 
 start flight recorder from the JVM paramethers 
-
+running jmc on command prompt --> jmc  -vm  C:\Users\lgonz75\Documents\jdk-11.0.12_windows-x64_bin\jdk-11.0.12\bin
 -XX:StartFlightRecording=delay=2min,duration=60s,name=Test,filename=recording.jfr,settings=profile
